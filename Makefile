@@ -8,9 +8,9 @@ MAKEFLAGS += --no-builtin-rules
 
 # Vars that don't depend on build type
 export uniqname := imericxu
-export identifier := 01BD41C3BF016AD7E8B6F837DF18926EC3E83350
+export identifier := EECS281IDENTIFIEREECS280IDENTIFIER
 export build_dir = build
-export executable := logman
+export executable := executable
 export full_submit_file = fullsubmit.tar.gz
 export partial_submit_file = partialsubmit.tar.gz
 export ungraded_submit_file = ungraded.tar.gz
