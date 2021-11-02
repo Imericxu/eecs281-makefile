@@ -6,9 +6,7 @@ ifndef build_dir
 # Disable unnecessary Make implicity rules
 MAKEFLAGS += --no-builtin-rules
 
-# Vars that don't depend on build type
-export uniqname := imericxu
-export identifier := EECS281IDENTIFIEREECS280IDENTIFIER
+# Vars required by targets below
 export build_dir = build
 export executable := executable
 export full_submit_file = fullsubmit.tar.gz
@@ -43,6 +41,9 @@ else
 ##############################
 # Main Makefile starts       #
 ##############################
+
+uniqname := imericxu
+identifier := EECS281IDENTIFIEREECS280IDENTIFIER
 
 CXX ?= g++
 warnings := -Wall -Werror -Wextra -Wconversion
