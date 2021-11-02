@@ -58,8 +58,8 @@ src_dir := src
 src := $(wildcard $(src_dir)/*.cpp)
 
 include_dir := include
-obj = $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
-deps = $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
+obj := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
+deps := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
 
 ##############################
 # Targets                    #
