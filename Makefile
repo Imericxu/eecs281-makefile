@@ -8,7 +8,8 @@ ifndef build_dir
 MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
 
-uniqname := imericxu
+# TODO: Edit Uniqname and identifier
+uniqname := johndoe
 identifier := EECS281IDENTIFIEREECS280IDENTIFIER
 
 CXX ?= g++
