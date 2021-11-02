@@ -100,7 +100,9 @@ else
 # Compile targets            #
 ##############################
 
+# C++ compiled object files
 obj := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
+# C++ generated depency files (tracks header changes)
 deps := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
 
 .PHONY: all
@@ -109,8 +111,10 @@ all: $(executable)
 $(executable): $(obj)
 	$(CXX) $(CXXFLAGS) $(obj) -o $(executable)
 
+# Read any existing dependency file
 -include $(deps)
 
+# The "-MMD" flag generates .d files of non-system headers
 $(build_dir)/%.o: $(src_dir)/%.cpp Makefile | $(build_dir)
 	$(CXX) $(CXXFLAGS) -I$(include_dir) -MMD -c -o $(build_dir)/$*.o $<
 
