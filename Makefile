@@ -62,15 +62,14 @@ release debug: identifier
 
 .PHONY: identifier
 identifier:
-	@grep_result=(grep --include=\*.{h,hpp,c,cpp} -rL "$(identifier)" \
-            $(include_dir) $(src_dir))
-	@if [ ! -z "$$grep_result" ]; then \
-		@echo "Missing project identifier in file(s): "; \
-		echo $$grep_result; \
-		rm -f $(full_submit_file) $(partial_submit_file) \
-                $(ungraded_submit_file); \
+	$(eval grep_result=$(shell grep --include=\*.{h,hpp,c,cpp} -rL $(identifier) $(include_dir) $(src_dir)))
+	@if [ ! -z "$(grep_result)" ]; then \
+		echo "Missing project identifier in file(s):"; \
+		echo $(grep_result); \
+		rm -rf $(full_submit_file) $(partial_submit_file) \
+				$(ungraded_submit_file); \
 		exit 1; \
-	fi
+	fi;
 
 .PHONY: fullsubmit
 fullsubmit: $(full_submit_file)
