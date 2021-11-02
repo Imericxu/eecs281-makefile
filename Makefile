@@ -31,7 +31,8 @@ export include_dir := include
 export build_dir = build
 
 full_submit_file = fullsubmit.tar.gz
-full_submit_files := $(src) $(wildcard $(include_dir)/*.h test*.txt)
+full_submit_files := $(src) $(wildcard $(include_dir)/*.h $(include_dir)/*.hpp \
+		test*.txt)
 partial_submit_file = partialsubmit.tar.gz
 partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_file))
 ungraded_submit_file = ungraded.tar.gz
