@@ -1,7 +1,8 @@
 ifndef build_dir
-########################################
-# Build type preprocessing and clean   #
-########################################
+##############################
+# Build type processing and  #
+# non-dependent targets      #
+##############################
 
 # Disable unnecessary Make implicity rules
 MAKEFLAGS += --no-builtin-rules
