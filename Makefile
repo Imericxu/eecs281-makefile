@@ -5,15 +5,34 @@ ifndef build_dir
 
 # Disable unnecessary Make implicity rules
 MAKEFLAGS += --no-builtin-rules
+.SUFFIXES:
 
-# Vars required by targets below
+uniqname := imericxu
+identifier := EECS281IDENTIFIEREECS280IDENTIFIER
+
+CXX ?= g++
+warnings := -Wall -Werror -Wextra -Wconversion
+CXXFLAGS += -std=c++17 $(warnings) -pedantic
+
+# enables c++17 on CAEN or 281 autograder
+PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
+LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
+LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
+
+src_dir := src
+src := $(wildcard $(src_dir)/*.cpp)
+
+include_dir := include
+
+full_submit_file = fullsubmit.tar.gz
+full_submit_files := $(src) $(wildcard $(include_dir)/*.h test*.txt)
+partial_submit_file = partialsubmit.tar.gz
+partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_file))
+ungraded_submit_file = ungraded.tar.gz
+ungraded_submit_files := $(filter-out Makefile, $(partial_submit_files))
+
 export build_dir = build
 export executable := executable
-export full_submit_file = fullsubmit.tar.gz
-export partial_submit_file = partialsubmit.tar.gz
-export ungraded_submit_file = ungraded.tar.gz
-
-.SUFFIXES:
 
 .PHONY: all
 all: release
@@ -37,37 +56,6 @@ debug: export executable := $(executable)_debug
 release debug:
 	@$(MAKE)
 
-else
-##############################
-# Main Makefile starts       #
-##############################
-
-uniqname := imericxu
-identifier := EECS281IDENTIFIEREECS280IDENTIFIER
-
-CXX ?= g++
-warnings := -Wall -Werror -Wextra -Wconversion
-CXXFLAGS += -std=c++17 $(warnings) -pedantic
-
-# enables c++17 on CAEN or 281 autograder
-PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
-LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
-LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
-
-src_dir := src
-src := $(wildcard $(src_dir)/*.cpp)
-
-include_dir := include
-obj := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
-deps := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
-
-##############################
-# Targets                    #
-##############################
-
-.PHONY: all
-all: identifier $(executable)
-
 .PHONY: identifier
 identifier:
 	@grep_result=(grep --include=\*.{h,hpp,c,cpp} -rL "$(identifier)" \
@@ -80,13 +68,43 @@ identifier:
 		exit 1; \
 	fi
 
+.PHONY: fullsubmit
+fullsubmit: $(full_submit_file)
+$(full_submit_file): identifier $(full_submit_files)
+	COPYFILE_DISABLE=true tar -vczf $(full_submit_file) $(full_submit_files)
+	@echo !!! Final submission prepared, test files included... \
+			READY FOR GRADING !!!
+
+.PHONY: partialsubmit
+partialsubmit: $(partial_submit_file)
+$(partial_submit_file): identifier $(partial_submit_files)
+	COPYFILE_DISABLE=true tar -vczf $(partial_submit_file) \
+			$(partial_submit_files)
+	@echo !!! WARNING: No test files included. Use 'make fullsubmit' to include \
+			test files. !!!
+
+.PHONY: ungraded
+ungraded: $(ungraded_submit_file)
+$(ungraded_submit_file): identifier $(ungraded_submit_files)
+	@touch __ungraded
+	COPYFILE_DISABLE=true tar -vczf $(ungraded_submit_file) \
+			$(ungraded_submit_files) __ungraded
+	@rm -f __ungraded
+	@echo !!! WARNING: This submission will not be graded. !!!
+
+else
+##############################
+# Compile targets            #
+##############################
+
+obj := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
+deps := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
+
+.PHONY: all
+all: identifier $(executable)
+
 $(executable): $(obj)
 	$(CXX) $(CXXFLAGS) $(obj) -o $(executable)
-
-.PHONY: static
-static:
-	cppcheck --enable=all --suppress=missingIncludeSystem \
-            -I$(include_dir) $(src)
 
 -include $(deps)
 
