@@ -20,10 +20,10 @@ PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
 LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
 LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
 
-src_dir := src
-src := $(wildcard $(src_dir)/*.cpp)
+export src_dir := src
+export src := $(wildcard $(src_dir)/*.cpp)
 
-include_dir := include
+export include_dir := include
 
 full_submit_file = fullsubmit.tar.gz
 full_submit_files := $(src) $(wildcard $(include_dir)/*.h test*.txt)
@@ -54,7 +54,7 @@ debug: export build_dir := $(build_dir)_debug
 debug: export CXXFLAGS += -g3 -DDEBUG
 debug: export executable := $(executable)_debug
 
-release debug:
+release debug: identifier
 	@$(MAKE)
 
 .PHONY: identifier
@@ -102,7 +102,7 @@ obj := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
 deps := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
 
 .PHONY: all
-all: identifier $(executable)
+all: $(executable)
 
 $(executable): $(obj)
 	$(CXX) $(CXXFLAGS) $(obj) -o $(executable)
