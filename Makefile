@@ -20,10 +20,14 @@ PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
 LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
 LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
 
+# Name of the executable
+export executable := executable
+
 export src_dir := src
 export src := $(wildcard $(src_dir)/*.cpp)
 
 export include_dir := include
+export build_dir = build
 
 full_submit_file = fullsubmit.tar.gz
 full_submit_files := $(src) $(wildcard $(include_dir)/*.h test*.txt)
@@ -31,9 +35,6 @@ partial_submit_file = partialsubmit.tar.gz
 partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_file))
 ungraded_submit_file = ungraded.tar.gz
 ungraded_submit_files := $(filter-out Makefile, $(partial_submit_files))
-
-export build_dir = build
-export executable := executable
 
 .PHONY: all
 all: release
