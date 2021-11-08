@@ -72,6 +72,11 @@ identifier:
 		exit 1; \
 	fi;
 
+.PHONY: static
+static:
+	cppcheck --enable=all --suppress=missingIncludeSystem \
+			$(src) $(include_dir)/*.h
+
 .PHONY: fullsubmit
 fullsubmit: $(full_submit_file)
 $(full_submit_file): identifier $(full_submit_files)
