@@ -62,7 +62,8 @@ release debug: identifier
 
 .PHONY: identifier
 identifier:
-	$(eval grep_result=$(shell grep --include=\*.{h,hpp,c,cpp} -rL $(identifier) $(include_dir) $(src_dir)))
+	$(eval grep_result=$(shell grep --include=\*.{h,hpp,c,cpp} -rL $(identifier) $(include_dir) \
+			$(src_dir)))
 	@if [ ! -z "$(grep_result)" ]; then \
 		echo "Missing project identifier in file(s):"; \
 		echo $(grep_result); \
