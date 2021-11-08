@@ -10,7 +10,7 @@ MAKEFLAGS += --no-builtin-rules
 
 # TODO: Edit Uniqname and identifier
 uniqname := johndoe
-identifier := EECS281IDENTIFIEREECS280IDENTIFIER
+identifier := EECS281IDENTIFIEREECS281IDENTIFIER
 
 CXX ?= g++
 warnings := -Wall -Werror -Wextra -Wconversion
