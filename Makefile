@@ -12,14 +12,14 @@ MAKEFLAGS += --no-builtin-rules
 uniqname := johndoe
 identifier := EECS281IDENTIFIEREECS281IDENTIFIER
 
-CXX ?= g++
-warnings := -Wall -Werror -Wextra -Wconversion
-CXXFLAGS += -std=c++17 $(warnings) -pedantic
+export CXX ?= g++
+export warnings := -Wall -Wextra -Wconversion -Wpedantic
+export CXXFLAGS += -std=c++17
 
 # enables c++17 on CAEN or 281 autograder
-PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
-LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
-LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
+export PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
+export LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
+export LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
 
 # Name of the executable
 export executable := executable
@@ -31,8 +31,8 @@ export include_dir := include
 export build_dir = build
 
 full_submit_file = fullsubmit.tar.gz
-full_submit_files := $(src) $(wildcard $(include_dir)/*.h $(include_dir)/*.hpp \
-		test*.txt)
+full_submit_files := Makefile $(src) $(wildcard $(include_dir)/*.h \
+		$(include_dir)/*.hpp test*.txt)
 partial_submit_file = partialsubmit.tar.gz
 partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_file))
 ungraded_submit_file = ungraded.tar.gz
@@ -122,7 +122,7 @@ $(executable): $(obj)
 
 # The "-MMD" flag generates .d files of non-system headers
 $(build_dir)/%.o: $(src_dir)/%.cpp Makefile | $(build_dir)
-	$(CXX) $(CXXFLAGS) -I$(include_dir) -MMD -c -o $(build_dir)/$*.o $<
+	$(CXX) $(CXXFLAGS) $(warnings) -I$(include_dir) -MMD -c -o $(build_dir)/$*.o $<
 
 $(build_dir):
 	mkdir -p $@
