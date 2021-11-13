@@ -38,29 +38,28 @@ partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_file))
 ungraded_submit_file = ungraded.tar.gz
 ungraded_submit_files := $(filter-out Makefile, $(partial_submit_files))
 
-.PHONY: all
 all: release
+.PHONY: all
 
-.PHONY: clean
 clean:
 	rm -rf $(build_dir)_release $(build_dir)_debug
 	rm -rf *.dSYM
 	rm -f $(full_submit_file) $(partial_submit_file) $(ungraded_submit_file)
 	rm -f $(executable) $(executable)_debug
+.PHONY: clean
 
-.PHONY: release
 release: export build_dir := $(build_dir)_release
 release: export CXXFLAGS += -O3 -DNDEBUG
+.PHONY: release
 
-.PHONY: debug
 debug: export build_dir := $(build_dir)_debug
 debug: export CXXFLAGS += -g3 -DDEBUG
 debug: export executable := $(executable)_debug
+.PHONY: debug
 
 release debug: identifier
 	@$(MAKE)
 
-.PHONY: identifier
 identifier:
 	$(eval grep_result=$(shell grep --include=\*.{h,hpp,c,cpp} -rL $(identifier) $(include_dir) \
 			$(src_dir)))
@@ -71,28 +70,28 @@ identifier:
 				$(ungraded_submit_file); \
 		exit 1; \
 	fi;
+.PHONY: identifier
 
-.PHONY: static
 static:
 	cppcheck --enable=all --suppress=missingIncludeSystem \
 			$(src) $(include_dir)/*.h
+.PHONY: static
 
-.PHONY: fullsubmit
 fullsubmit: $(full_submit_file)
 $(full_submit_file): identifier $(full_submit_files)
 	COPYFILE_DISABLE=true tar -vczf $(full_submit_file) $(full_submit_files)
 	@echo !!! Final submission prepared, test files included... \
 			READY FOR GRADING !!!
+.PHONY: fullsubmit
 
-.PHONY: partialsubmit
 partialsubmit: $(partial_submit_file)
 $(partial_submit_file): identifier $(partial_submit_files)
 	COPYFILE_DISABLE=true tar -vczf $(partial_submit_file) \
 			$(partial_submit_files)
 	@echo !!! WARNING: No test files included. Use 'make fullsubmit' to include \
 			test files. !!!
+.PHONY: partialsubmit
 
-.PHONY: ungraded
 ungraded: $(ungraded_submit_file)
 $(ungraded_submit_file): identifier $(ungraded_submit_files)
 	@touch __ungraded
@@ -100,6 +99,7 @@ $(ungraded_submit_file): identifier $(ungraded_submit_files)
 			$(ungraded_submit_files) __ungraded
 	@rm -f __ungraded
 	@echo !!! WARNING: This submission will not be graded. !!!
+.PHONY: ungraded
 
 else
 ##############################
@@ -111,8 +111,8 @@ obj := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.o,$(src))
 # C++ generated depency files (tracks header changes)
 deps := $(patsubst $(src_dir)/%.cpp,$(build_dir)/%.d,$(src))
 
-.PHONY: all
 all: $(executable)
+.PHONY: all
 
 $(executable): $(obj)
 	$(CXX) $(CXXFLAGS) $(obj) -o $(executable)
