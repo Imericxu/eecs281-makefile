@@ -48,6 +48,19 @@ clean:
 	rm -f $(executable) $(executable)_debug
 .PHONY: clean
 
+help:
+	@echo "Some valid targets are:"
+	@echo "... all:              builds the release version of the program"
+	@echo "... release:          builds the release version of the program"
+	@echo "... debug:            builds the debug version of the program"
+	@echo "... identifier:       checks that all submission files contain the identifier"
+	@echo "... static:           runs cppcheck on source files"
+	@echo "... fullsubmit:       creates a tarball of all submission files"
+	@echo "... partialsubmit:    makes fullsubmit without the test files"
+	@echo "... ungraded:         makes partialsubmit without the Makefile"
+	@echo "... clean:            removes all build artifacts"
+.PHONY: help
+
 release: export build_dir := $(build_dir)_release
 release: export CXXFLAGS += -O3 -DNDEBUG
 .PHONY: release
