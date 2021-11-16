@@ -21,20 +21,20 @@ export PATH := /usr/um/gcc-6.2.0/bin:$(PATH)
 export LD_LIBRARY_PATH := /usr/um/gcc-6.2.0/lib64
 export LD_RUN_PATH := /usr/um/gcc-6.2.0/lib64
 
-# Name of the executable
+# TODO: Set the name of the executable
 export executable := executable
 
+# TODO: Set important directories
 export src_dir := src
-export src := $(wildcard $(src_dir)/*.cpp)
-
 export include_dir := include
 export build_dir = build
 
+export src := $(wildcard $(src_dir)/*.cpp)
+
 full_submit_file = fullsubmit.tar.gz
-full_submit_files := Makefile $(src) $(wildcard $(include_dir)/*.h \
-		$(include_dir)/*.hpp test*.txt)
+full_submit_files := Makefile $(src) $(wildcard $(include_dir)/*.h test*.txt)
 partial_submit_file = partialsubmit.tar.gz
-partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_file))
+partial_submit_files := $(filter-out $(wildcard test*.txt), $(full_submit_files))
 ungraded_submit_file = ungraded.tar.gz
 ungraded_submit_files := $(filter-out Makefile, $(partial_submit_files))
 
@@ -86,32 +86,28 @@ identifier:
 .PHONY: identifier
 
 static:
-	cppcheck --enable=all --suppress=missingIncludeSystem \
-			$(src) $(include_dir)/*.h
+	cppcheck --enable=all --suppress=missingIncludeSystem $(src) $(include_dir)/*.h
 .PHONY: static
 
 fullsubmit: $(full_submit_file)
 $(full_submit_file): identifier $(full_submit_files)
 	COPYFILE_DISABLE=true tar -vczf $(full_submit_file) $(full_submit_files)
-	@echo !!! Final submission prepared, test files included... \
-			READY FOR GRADING !!!
+	@echo "!!! Final submission prepared, test files included... READY FOR GRADING !!!"
 .PHONY: fullsubmit
 
 partialsubmit: $(partial_submit_file)
 $(partial_submit_file): identifier $(partial_submit_files)
 	COPYFILE_DISABLE=true tar -vczf $(partial_submit_file) \
 			$(partial_submit_files)
-	@echo !!! WARNING: No test files included. Use 'make fullsubmit' to include \
-			test files. !!!
+	@echo "!!! WARNING: No test files included. Use 'make fullsubmit' to include test files. !!!"
 .PHONY: partialsubmit
 
 ungraded: $(ungraded_submit_file)
 $(ungraded_submit_file): identifier $(ungraded_submit_files)
 	@touch __ungraded
-	COPYFILE_DISABLE=true tar -vczf $(ungraded_submit_file) \
-			$(ungraded_submit_files) __ungraded
+	COPYFILE_DISABLE=true tar -vczf $(ungraded_submit_file) $(ungraded_submit_files) __ungraded
 	@rm -f __ungraded
-	@echo !!! WARNING: This submission will not be graded. !!!
+	@echo "!!! WARNING: This submission will not be graded. !!!"
 .PHONY: ungraded
 
 else
